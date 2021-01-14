@@ -1,0 +1,14 @@
+h1{
+    color:aqua
+}
+
+footer {
+    text-align: center;
+}
+
+body {
+    background-image: url('C:\Users\aos_5\Desktop\flaskPractice\static\zerotwo.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
