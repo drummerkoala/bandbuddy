@@ -23,7 +23,8 @@ def create_app():
 
     app.add_url_rule("/login", view_func=views.login_page, methods=["GET", "POST"])
     app.add_url_rule("/logout", view_func=views.logout_page)
-    app.add_url_rule("/requests", view_func=views.movies_page, methods=["GET", "POST"])
+    app.add_url_rule("/band_requests", view_func=views.movies_page, methods=["GET", "POST"])
+    app.add_url_rule("/member_requests", view_func=views.movies_page, methods=["GET", "POST"])
     app.add_url_rule("/movies/<int:movie_key>", view_func=views.movie_page)
     app.add_url_rule("/movies/<int:movie_key>/edit", view_func=views.movie_edit_page, methods=["GET", "POST"])
     app.add_url_rule("/new-movie", view_func=views.movie_add_page, methods=["GET", "POST"])
@@ -31,7 +32,7 @@ def create_app():
     lm.init_app(app)
     lm.login_view = "login_page"
 
-    db = Database()
+    db = Database(app)
     app.config["db"] = db
 
     return app
