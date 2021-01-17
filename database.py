@@ -42,20 +42,6 @@ class Database:
         lastrow = cursor.lastrowid
         return lastrow
 
-    def update_movie(self, movie_key, movie):
-        self.movies[movie_key] = movie
-
-    def delete_movie(self, movie_key):
-        if movie_key in self.movies:
-            del self.movies[movie_key]
-
-    def get_movie(self, movie_key):
-        movie = self.movies.get(movie_key)
-        if movie is None:
-            return None
-        movie_ = Movie(movie.title, year=movie.year)
-        return movie_
-
     def get_all_cities(self):
         cursor = self.db.connection.cursor()
         query = "SELECT * FROM city ORDER BY city_name;"
