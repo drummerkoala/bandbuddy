@@ -19,7 +19,6 @@ class MovieEditForm(FlaskForm):
 
 class NewUserForm(FlaskForm):
     user_name = StringField("Name", validators=[DataRequired(), Length(max = 50)])
-    email = StringField("E-mail", validators=[Email(message = "Please enter a valid e-mail."), Length(max = 50)])
     password = PasswordField("Password", validators=[DataRequired()])
     age = IntegerField("Age", validators=[NumberRange(min=12, max = 99)])
     gender = SelectField("Gender", choices=['Male', 'Female'])
@@ -40,7 +39,7 @@ class BandRequestForm(FlaskForm):
     
 class MemberRequestForm(FlaskForm):
     instrument = SelectField(u'Instrument', choices=['Drums', 'Vocals', 'Electroguitar', 'Bass Guitar', 'Piano'])
-    pref_gender = SelectField("Gender", validators=[Optional()], choices=['Male', 'Female'])
+    pref_gender = SelectField(u'Gender', validators=[Optional()], choices=['Male', 'Female'])
     goal = SelectField(u'Goal', validators=[Optional()], choices=['Fun', 'Socializing', 'Concerts - Serious', 'Concerts - Relaxed'])
 
 class LoginForm(FlaskForm):
