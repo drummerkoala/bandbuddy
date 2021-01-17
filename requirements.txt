@@ -1,2 +1,0 @@
-Flask-WTF
-wtforms_components
