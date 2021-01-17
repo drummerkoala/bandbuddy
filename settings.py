@@ -2,6 +2,11 @@ DEBUG = True
 PORT = 8080
 SECRET_KEY = "secret"
 WTF_CSRF_ENABLED = True
+MYSQL_HOST = "localhost"
+MYSQL_USER = "root"
+MYSQL_PASSWORD = "root"
+MYSQL_PORT = 3306
+MYSQL_DB = "bbdb"
 
 PASSWORDS = {
     "admin": "$pbkdf2-sha256$29000$PIdwDqH03hvjXAuhlLL2Pg$B1K8TX6Efq3GzvKlxDKIk4T7yJzIIzsuSegjZ6hAKLk",
