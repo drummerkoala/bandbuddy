@@ -1,7 +1,8 @@
 from datetime import datetime
 from flask import abort, current_app, render_template, request, redirect, url_for, flash
-from forms import MovieEditForm, LoginForm
+from forms import MovieEditForm, LoginForm, NewBandForm, NewUserForm, BandRequestForm, MemberRequestForm
 from movie import Movie
+from classes import BBUser, Band, BandRequest, MemberRequest
 from flask_login import login_required, login_user, current_user, logout_user
 from user import get_user
 from passlib.hash import pbkdf2_sha256 as hasher
@@ -11,6 +12,60 @@ def home_page():
     today = datetime.today()
     day_name = today.strftime("%A")
     return render_template("home.html", day=day_name)
+
+def member_request_page(request_id):
+    return None
+
+
+def member_requests_page():
+    db = current_app.config["db"]
+
+def user_add_page():
+    form = NewUserForm()
+    if form.validate_on_submit():
+        user_name = form.data["name"]
+        password = form.data["password"]
+        age = form.data["age"]
+        gender = form.data["gender"]
+        instrument = form.data["instrument"]
+        city = form.data["city"]
+        level = form.data["level"]
+        goal = form.data["goal"]
+        user = BBUser(user_name, password, age, gender, instrument, city, level, goal)
+        db = current_app.config["db"]
+        lastrow = db.add_user(user)
+        flash("Success!")
+        return redirect(url_for("login_page"))
+
+
+@login_required
+def member_request_add_page():
+    form = MemberRequestForm()
+    if form.validate_on_submit():
+        instrument = form.data["instrument"]
+        goal = form.data["goal"]
+        gender = form.data["pref_gender"]
+        request = MemberRequest(instrument, goal, gender)
+        db = current_app.config["db"]
+        lastrow = db.add_member_request()
+        flash("Request added!")
+        return redirect(url_for("member_request_page", request_id = lastrow))
+    
+
+@login_required
+def movie_add_page():
+    if not current_user.is_admin:
+        abort(401)
+    form = MovieEditForm()
+    if form.validate_on_submit():
+        title = form.data["title"]
+        year = form.data["year"]
+        movie = Movie(title, year=year)
+        db = current_app.config["db"]
+        movie_key = db.add_movie(movie)
+        flash("Movie added.")
+        return redirect(url_for("movie_page", movie_key=movie_key))
+    return render_template("movie_edit.html", form=form)
 
 
 def movies_page():
@@ -34,20 +89,6 @@ def movie_page(movie_key):
         abort(404)
     return render_template("movie.html", movie=movie)
 
-@login_required
-def movie_add_page():
-    if not current_user.is_admin:
-        abort(401)
-    form = MovieEditForm()
-    if form.validate_on_submit():
-        title = form.data["title"]
-        year = form.data["year"]
-        movie = Movie(title, year=year)
-        db = current_app.config["db"]
-        movie_key = db.add_movie(movie)
-        flash("Movie added.")
-        return redirect(url_for("movie_page", movie_key=movie_key))
-    return render_template("movie_edit.html", form=form)
 
 
 @login_required
