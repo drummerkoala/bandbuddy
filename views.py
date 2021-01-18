@@ -13,12 +13,86 @@ def home_page():
     day_name = today.strftime("%A")
     return render_template("home.html", day=day_name)
 
-def member_request_page(request_id):
-    return None
+def signup_page():
+    new_user = NewUserForm()
+    if  request.method == "GET":
+        return render_template("signup_page.html")
+    db = current_app.config["db"]
+    new_user.user_name = request.form["Username"]
+    new_user.password = hasher.hash(request.form["Password"])
+    new_user.age = request.form["Age"]
+    new_user.gender = request.form["Gender"]
+    new_user.instrument = request.form["Instrument"]
+    new_user.city = request.form["City"]
+    new_user.level = request.form["Level"]
+    new_user.goal = request.form["Goal"]
+    user_check = db.add_user(new_user)
+    if (user_check != None):
+        flash("Success!")
+        return redirect(url_for("home_page"))
+    else:
+        flash("Username already exists")
+        return render_template("signup_page.html")
 
+
+
+def member_request_page(request_id):
+    
+    request = db.get_member_request(request_id)
+    if request is None:
+        abort(404)
+    return render_template("member_request.html", request=request)
+
+def band_request_page(request_id):
+    db = current_app.config["db"]
+    request = db.get_band_request(request_id)
+    if request is None:
+        abort(404)
+    return render_template("band_request.html", request=request)
+
+def movie_page(movie_key):
+    db = current_app.config["db"]
+    movie = db.get_movie(movie_key)
+    if movie is None:
+        abort(404)
+    return render_template("movie.html", movie=movie)
 
 def member_requests_page():
     db = current_app.config["db"]
+    if request.method == "GET":
+        member_requests = db.get_all_member_requests()
+        return render_template("member_requests.html", requests=member_requests)
+    else:
+        if not current_user.is_admin: #change it to check if the  current user is the creator of the form
+            abort(401)
+        return render_template("member_requests.html")
+        #implement later
+        
+def band_requests_page():
+    db = current_app.config["db"]
+    if request.method == "GET":
+        band_requests = db.get_all_band_requests()
+        return render_template("band_requests.html", requests=band_requests)
+    else:
+        if not current_user.is_admin: #change it to check if the  current user is the creator of the form
+            abort(401)
+        return render_template("band_requests.html")
+        #implement later
+    return render_template("band_requests.html")
+
+def movies_page():
+    db = current_app.config["db"]
+    if request.method == "GET":
+        movies = db.get_movies()
+        return render_template("movies.html", movies=sorted(movies))
+    else:
+        if not current_user.is_admin:
+            abort(401)
+        form_movie_keys = request.form.getlist("movie_keys")
+        for form_movie_key in form_movie_keys:
+            db.delete_movie(int(form_movie_key))
+        flash("%(num)d movies deleted." % {"num": len(form_movie_keys)})
+        return redirect(url_for("band_requests_page"))    
 
 def user_add_page():
     form = NewUserForm()
@@ -49,63 +123,20 @@ def member_request_add_page():
         db = current_app.config["db"]
         lastrow = db.add_member_request()
         flash("Request added!")
-        return redirect(url_for("member_request_page", request_id = lastrow))
-    
+        return render_template("member_request.html")
 
 @login_required
-def movie_add_page():
-    if not current_user.is_admin:
-        abort(401)
-    form = MovieEditForm()
+def band_request_add_page():
+    form = BandRequestForm()
     if form.validate_on_submit():
-        title = form.data["title"]
-        year = form.data["year"]
-        movie = Movie(title, year=year)
+        goal = form.data["goal"]
+        genre = form.data["genre"]
+        request = BandRequest(goal, genre)
         db = current_app.config["db"]
-        movie_key = db.add_movie(movie)
-        flash("Movie added.")
-        return redirect(url_for("movie_page", movie_key=movie_key))
-    return render_template("movie_edit.html", form=form)
+        lastrow = db.add_band_request()
+        flash("Request added!")
+        return render_template("member_request.html")
 
-
-def movies_page():
-    db = current_app.config["db"]
-    if request.method == "GET":
-        movies = db.get_movies()
-        return render_template("movies.html", movies=sorted(movies))
-    else:
-        if not current_user.is_admin:
-            abort(401)
-        form_movie_keys = request.form.getlist("movie_keys")
-        for form_movie_key in form_movie_keys:
-            db.delete_movie(int(form_movie_key))
-        flash("%(num)d movies deleted." % {"num": len(form_movie_keys)})
-        return redirect(url_for("band_requests_page"))
-
-def movie_page(movie_key):
-    db = current_app.config["db"]
-    movie = db.get_movie(movie_key)
-    if movie is None:
-        abort(404)
-    return render_template("movie.html", movie=movie)
-
-
-
-@login_required
-def movie_edit_page(movie_key):
-    db = current_app.config["db"]
-    movie = db.get_movie(movie_key)
-    form = MovieEditForm()
-    if form.validate_on_submit():
-        title = form.data["title"]
-        year = form.data["year"]
-        movie = Movie(title, year=year)
-        db.update_movie(movie_key, movie)
-        flash("Movie data updated.")
-        return redirect(url_for("movie_page", movie_key=movie_key))
-    form.title.data = movie.title
-    form.year.data = movie.year if movie.year else ""
-    return render_template("movie_edit.html", form=form)
 
 def validate_movie_form(form):
     form.data = {}
