@@ -12,7 +12,7 @@ lm = LoginManager()
 
 @lm.user_loader
 def load_user(user_id):
-    return get_user(user_id[0])
+    return get_user(user_id)
 
 
 def create_app():

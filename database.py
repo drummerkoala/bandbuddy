@@ -73,6 +73,26 @@ class Database:
         else: 
             return None
 
+    def get_user_with_id(self, user_id):
+        cursor = self.db.connection.cursor()
+        query = "SELECT * FROM player WHERE user_id = %s;"
+        cursor.execute(query, (user_id,))
+        user_id = cursor.fetchone()
+        if user_id is not None:
+            return user_id
+        else: 
+            return None
+
+    def get_user_id(self, username):
+        cursor = self.db.connection.cursor()
+        query = "SELECT user_id FROM player WHERE user_name = %s;"
+        cursor.execute(query, (username,))
+        user_id = cursor.fetchone()
+        if user_id is not None:
+            return user_id
+        else: 
+            return None
+
     def get_all_bands():
         cursor = self.db.connection.cursor()
         #use join to get the city of the leader

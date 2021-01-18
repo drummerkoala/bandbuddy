@@ -37,12 +37,11 @@ def signup_page():
 def login_page():
     form = LoginForm()
     if form.validate_on_submit():
+        db = current_app.config["db"]
         username = form.data["username"]
-        print(username)
-        user = get_user(username)
-        print("User is: ")
-        print(user)
-        if user is not None:
+        user_id = db.get_user_id(username)
+        if user_id is not None:
+            user = get_user(user_id)
             password = form.data["password"]
             if hasher.verify(password, user.password):
                 login_user(user)
@@ -83,6 +82,7 @@ def movie_page(movie_key):
 
 def member_requests_page():
     db = current_app.config["db"]
+    print(current_user)
     if request.method == "GET":
         member_requests = db.get_all_member_requests()
         return render_template("member_requests.html", requests=member_requests)
