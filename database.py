@@ -7,24 +7,28 @@ from user import User
 class Database:
     def __init__(self, app):
         self.db = MySQL(app)
-        self.movies = {}
-        self._last_movie_key = 0
 
     def add_user(self, user):
-        cursor = self.db.connection.cursor()
-        query = "INSERT INTO player (user_name, band_id, instrument, city, level, age, gender, goal) VALUES (?, ?, ?, ?, ?, ?, ?, ?);"
-        cursor.execute(query, (user.user_name, user.band_id, user.instrument, user.city, user.level, user.age, user.gender, user.goal))
-        connection.commit()
-        lastrow = cursor.lastrowid
-        return lastrow
+        if (self.get_user(user.user_name) is None):
+            cursor = self.db.connection.cursor()
+            query = "INSERT INTO player (user_name, password, instrument, city, level, age, gender, goal) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"
+            cursor.execute(query, (user.user_name, user.password, user.instrument, user.city, user.level, user.age, user.gender, user.goal))
+            cursor.connection.commit()
+            lastrowid = cursor.lastrowid
+            print(lastrowid)
+            return lastrowid
+        else:
+            return None
+
+        
 
     def add_band(self, user, band):
         cursor = self.db.connection.cursor()
-        query = "INSERT INTO band (band_name, leader, genre, level, city) VALUES (?, ?, ?, ?, ?);"
+        query = "INSERT INTO band (band_name, leader, genre, level, city) VALUES (%s, %s, %s, %s, %s);"
         cursor.execute(query, (band.band_name, user.user_name, band.genre, band.level, band.city))
         connection.commit()
-        lastrow = cursor.lastrowid
-        return lastrow
+        lastrowid = cursor.lastrowid
+        return lastrowid
 
     def add_member_request(self, user, band, request, timenow):
         cursor = self.db.connection.cursor()
@@ -61,13 +65,17 @@ class Database:
 
     def get_user(self, username):
         cursor = self.db.connection.cursor()
-        query = "SELECT * FROM player WHERE user_name = ?;"
-        cursor.execute(query, (username))
+        query = "SELECT * FROM player WHERE user_name = %s;"
+        cursor.execute(query, (username,))
         user = cursor.fetchone()
         if user is not None:
             return user
         else: 
             return None
+
+    def get_all_bands():
+        cursor = self.db.connection.cursor()
+        #use join to get the city of the leader
 
     
     def get_all_band_requests(self):
