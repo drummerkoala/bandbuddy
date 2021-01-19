@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}Make a Member Request{% endblock %}
+{% block content %}
+    <h1>love</h1>
+    <form action="" method="post">    
+        <label for="Gender">Pick your preferred gender:</label><br>
+        <select name="Gender" id="Gender">
+            <option value="">None</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select> <br>
+    
+        <label for="Instrument">Choose the instrument needed:</label><br>
+        <select name="Instrument" id="Instrument">
+            <option value="Vocals">Vocals</option>
+            <option value="Drums">Drums</option>
+            <option value="Electroguitar">Electro Guitar</option>
+            <option value="Bass Guitar">Bass Guitar</option>
+            <option value="Piano">Piano</option>
+        </select> <br>
+    
+        <label for="Goal">Choose your goal:</label><br>
+        <select name="Goal" id="Goal">
+            <option value="Fun">Fun</option>
+            <option value="Socializing">Socializing</option>
+            <option value="Concerts - Serious">Concerts - Serious</option>
+            <option value="Concerts - Relaxed">Concerts - Relaxed</option>
+        </select><br><br>
+    
+        <input type="submit" value="Submit">
+    </form>
+
+{% endblock %}
