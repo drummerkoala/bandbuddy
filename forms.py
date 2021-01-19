@@ -6,17 +6,6 @@ from wtforms_components import IntegerField, SelectField
 from datetime import datetime
 
 
-class MovieEditForm(FlaskForm):
-    title = StringField("Title", validators=[DataRequired()])
-
-    year = IntegerField(
-        "Year",
-        validators=[
-            Optional(),
-            NumberRange(min=1887, max=datetime.now().year),
-        ],
-    )
-
 class NewUserForm(FlaskForm):
     user_name = StringField("Name", validators=[DataRequired(), Length(max = 50)])
     password = PasswordField("Password", validators=[DataRequired()])
