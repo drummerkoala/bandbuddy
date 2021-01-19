@@ -94,7 +94,7 @@
 
     <main>
       {% for message in get_flashed_messages() %}
-      <div class="notification is-info">{{ message }}</div>
+      <div class="notification is-black">{{ message }}</div>
       {% endfor %}
       
       <section class="section">
@@ -105,8 +105,10 @@
     </main>
 
     <footer class="footer">
-      <div class="content">
-        <small>&copy; 2015-2023, drummerkoala</small>
+      <div class="content has-text-centered">
+        <p>
+          <strong>BandBuddy</strong> by <a href="https://github.com/drummerkoala">drummerkoala</a>.
+        </p>
       </div>
     </footer>
   </body>

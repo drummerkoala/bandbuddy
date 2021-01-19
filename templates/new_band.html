@@ -1,37 +1,59 @@
 {% extends "layout.html" %}
 {% block title %}Create New Band{% endblock %}
 {% block content %}
-<h1>love</h1>
     
 <form action="" method="post">
-  <label for="Band Name">Band Name</label><br>
-  <input name="Band Name" type="text" placeholder="Maximum 50 characters" required="required" maxlength="50"><br>
-  <label for="Genre">Pick a genre:</label><br>
-  <select name="Genre" id="Genre">
-      <option value="Blues">Blues</option>
-      <option value="Country">Country</option>
-      <option value="Dance">Dance</option>
-      <option value="Electronic">Electronic</option>
-      <option value="Hip Hop">Hip Hop</option>
-      <option value="Jazz">Jazz</option>
-      <option value="Latin">Latin</option>
-      <option value="Pop">Pop</option>
-      <option value="Rap">Rap</option>
-      <option value="Rock">Rock</option>
-      <option value="Other">Other</option>
-  </select><br>
 
-  <label for="Level">Choose your level:</label><br>
-  <select name="Level" id="Level">
-      <option value="Basic">Basic</option>
-      <option value="Novice">Novice</option>
-      <option value="Intermediate">Intermediate</option>
-      <option value="Advanced">Advanced</option>
-      <option value="Expert">Expert</option>
-  </select><br>
+  <div class="field">
+    <label class="label">Band Name</label>
+    <div class="control has-icons-left has-icons-right">
+        <input name="Band Name" class="input is-success" type="text" placeholder="Maximum 50 characters"  required="required" maxlength="50">
+    </div>
+</div>
+  
+  
+  <div class="field">
+    <label class="label">Genre</label>
+    <div class="control">
+        <div class="select">
+            <select name="Genre">
+                <option value="Blues">Blues</option>
+                <option value="Country">Country</option>
+                <option value="Dance">Dance</option>
+                <option value="Electronic">Electronic</option>
+                <option value="Hip Hop">Hip Hop</option>
+                <option value="Jazz">Jazz</option>
+                <option value="Latin">Latin</option>
+                <option value="Pop">Pop</option>
+                <option value="Rap">Rap</option>
+                <option value="Rock">Rock</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div class="field">
+  <label class="label">Level</label>
+  <div class="control">
+      <div class="select">
+          <select name="Level">
+              <option value="Basic">Basic</option>
+              <option value="Novice">Novice</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+              <option value="Expert">Expert</option>
+          </select>
+      </div>
+  </div>
+</div>
 
 
-  <input type="submit" value="Submit">
+<div class="field is-grouped">
+  <div class="control">
+      <button class="button is-danger">Submit</button>
+  </div>
+</div>
 </form>
 
 {% endblock %}

@@ -1,32 +1,52 @@
 {% extends "layout.html" %}
 {% block title %}Make a Band Request{% endblock %}
 {% block content %}
+
+
     <h1>hate</h1>
     <form action="" method="post">
-        <label for="Genre">Pick a genre:</label><br>
-        <select name="Genre" id="Genre">
-            <option value="Blues">Blues</option>
-            <option value="Country">Country</option>
-            <option value="Dance">Dance</option>
-            <option value="Electronic">Electronic</option>
-            <option value="Hip Hop">Hip Hop</option>
-            <option value="Jazz">Jazz</option>
-            <option value="Latin">Latin</option>
-            <option value="Pop">Pop</option>
-            <option value="Rap">Rap</option>
-            <option value="Rock">Rock</option>
-            <option value="Other">Other</option>
-        </select><br>
 
-        <label for="Goal">Choose your goal:</label><br>
-        <select name="Goal" id="Goal">
-            <option value="Fun">Fun</option>
-            <option value="Socializing">Socializing</option>
-            <option value="Concerts - Serious">Concerts - Serious</option>
-            <option value="Concerts - Relaxed">Concerts - Relaxed</option>
-        </select><br><br>
+        <div class="field">
+            <label class="label">Genre</label>
+            <div class="control">
+                <div class="select">
+                    <select name="Genre">
+                        <option value="Blues">Blues</option>
+                        <option value="Country">Country</option>
+                        <option value="Dance">Dance</option>
+                        <option value="Electronic">Electronic</option>
+                        <option value="Hip Hop">Hip Hop</option>
+                        <option value="Jazz">Jazz</option>
+                        <option value="Latin">Latin</option>
+                        <option value="Pop">Pop</option>
+                        <option value="Rap">Rap</option>
+                        <option value="Rock">Rock</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
-        <input type="submit" value="Submit">
+        <div class="field">
+            <label class="label">Goal</label>
+            <div class="control">
+                <div class="select">
+                    <select name="Goal">
+                        <option value="Fun">Fun</option>
+                        <option value="Socializing">Socializing</option>
+                        <option value="Concerts - Serious">Concerts - Serious</option>
+                        <option value="Concerts - Relaxed">Concerts - Relaxed</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-danger">Submit</button>
+            </div>
+        </div>
     </form>
     
 
