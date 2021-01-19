@@ -35,6 +35,32 @@ def signup_page():
         return render_template("signup_page.html")
 
 @login_required
+def member_request_add_page():
+    print("HATE")
+    db = current_app.config["db"]
+    new_request = MemberRequestForm()
+    user_name = current_user.username
+    band = db.get_band_with_username(user_name)
+    if  request.method == "GET":
+        if band is None:
+            flash("You are not in a band.")
+            return redirect(url_for("home_page"))
+        else:
+            return render_template("member_request.html")
+    print("LOVE")
+    new_request.goal = request.form["Goal"]
+    new_request.instrument = request.form["Instrument"]
+    new_request.pref_gender = request.form["Gender"]
+    time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    print(time_now)
+    lastrow = db.add_member_request(current_user, band, new_request, time_now)
+    print(time_now)
+    print("love")
+    flash("Request added!")
+    return render_template("member_request.html")
+
+
+@login_required
 def band_add_page():
     new_band = NewBandForm()
     if request.method == "GET":
@@ -53,21 +79,7 @@ def band_add_page():
         flash("Band already exists!")
         return render_template("new_band.html")
 
-@login_required
-def member_request_add_page():
-    new_request = MemberRequestForm()
-    if  request.method == "GET":
-        return render_template("member_request.html")
-    if form.validate_on_submit():
-        db = current_app.config["db"]
-        new_request.goal = request.form["Goal"]
-        new_request.instrument = request.form["Instrument"]
-        new_request.pref_gender = request.form["Gender"]
-        ################################### CREATE BAND PAGE FIRST THEN CONTINUE FROM HERE
-        
-        lastrow = db.add_member_request(member_request)
-        flash("Request added!")
-        return render_template("member_request.html")
+
 
 def login_page():
     form = LoginForm()
@@ -153,18 +165,7 @@ def movies_page():
         flash("%(num)d movies deleted." % {"num": len(form_movie_keys)})
         return redirect(url_for("band_requests_page"))    
 
-@login_required
-def member_request_add_page():
-    form = MemberRequestForm()
-    if form.validate_on_submit():
-        instrument = form.data["instrument"]
-        goal = form.data["goal"]
-        gender = form.data["pref_gender"]
-        member_request = MemberRequest(instrument, goal, gender)
-        db = current_app.config["db"]
-        lastrow = db.add_member_request(member_request)
-        flash("Request added!")
-        return render_template("member_request.html")
+
 
 @login_required
 def band_request_add_page():

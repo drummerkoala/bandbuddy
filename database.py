@@ -34,8 +34,9 @@ class Database:
     def add_member_request(self, user, band, request, timenow):
         cursor = self.db.connection.cursor()
         query = "INSERT INTO member_request (band_id, instrument, request_date, gender_pref, goal) VALUES (%s, %s, %s, %s, %s);"
-        cursor.execute(query, (band.band_id, request.instrument, timenow, request.gender_pref, request.goal))
-        connection.commit()
+        print(band[0])
+        cursor.execute(query, (band[0], request.instrument, timenow, request.pref_gender, request.goal))
+        cursor.connection.commit()
         lastrow = cursor.lastrowid
         return lastrow
 
@@ -43,7 +44,7 @@ class Database:
         cursor = self.db.connection.cursor()
         query = "INSERT INTO band_request (creator_id, instrument, request_date, goal, genre) VALUES (?, ?, ?, ?, ?);"
         cursor.execute(query, (user.user_id, request.instrument, timenow, request.goal, request.genre))
-        connection.commit()
+        cursor.connection.commit()
         lastrow = cursor.lastrowid
         return lastrow
 
