@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+
+<form action="" method="post">
+    <label for="Username">User Name</label><br>
+    <input name="Username" type="text" placeholder="Maximum 50 characters" required="required" maxlength="50"><br>
+
+    <label for="Password" type="password">Password</label><br>
+    <input name ="Password" required="required"><br>
+
+    <label for="Age">Age</label><br>
+    <input name="Age" type="number"  required="required"><br>
+
+    <label for="Gender">Pick your gender:</label><br>
+    <select name="Gender" id="Gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select> <br>
+
+    <label for="Instrument">Choose an instrument:</label><br>
+    <select name="Instrument" id="Instrument">
+        <option value="Vocals">Vocals</option>
+        <option value="Drums">Drums</option>
+        <option value="Electroguitar">Electro Guitar</option>
+        <option value="Bass Guitar">Bass Guitar</option>
+        <option value="Piano">Piano</option>
+    </select> <br>
+
+    <label for="City">Pick a city:</label><br>
+    <select name="City" id="City">
+        <option value="Istanbul">Istanbul</option>
+        <option value="Denizli">Denizli</option>
+        <option value="Izmir">Izmir</option>
+        <option value="Ankara">Ankara</option>
+        <option value="Antalya">Antalya</option>
+    </select> <br>
+
+    <label for="Level">Choose your level:</label><br>
+    <select name="Level" id="Level">
+        <option value="Basic">Basic</option>
+        <option value="Novice">Novice</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Advanced">Advanced</option>
+        <option value="Expert">Expert</option>
+    </select> <br>
+
+    <label for="Goal">Choose your goal:</label><br>
+    <select name="Goal" id="Goal">
+        <option value="Fun">Fun</option>
+        <option value="Socializing">Socializing</option>
+        <option value="Concerts - Serious">Concerts - Serious</option>
+        <option value="Concerts - Relaxed">Concerts - Relaxed</option>
+    </select><br><br>
+
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock %}
