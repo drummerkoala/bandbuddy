@@ -17,6 +17,9 @@
             <a class="button is-link" href="{{ url_for('home_page') }}">Home</a>
           </span>
           <span class="navbar-item">
+            <a class="button is-link" href="{{ url_for('bands_page') }}">Bands</a>
+          </span>
+          <span class="navbar-item">
             <a class="button is-link" href="{{ url_for('band_requests_page') }}">List Band Requests</a>
           </span>
           <span class="navbar-item">
@@ -41,7 +44,9 @@
             <a class="button is-link" href="{{ url_for('signup_page') }}">Sign Up</a>
           </span>
           {% else %}
-          <a class="button is-link" href="{{ url_for('logout_page') }}">Log out</a>
+          <span class="navbar-item"></span>
+            <a class="button is-link" href="{{ url_for('logout_page') }}">Log out</a>
+          </span>
           {% endif %}
           {% if current_user.is_authenticated %}  Hi {{ current_user.username }}! {% endif %}
         </div>
