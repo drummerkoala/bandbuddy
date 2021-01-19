@@ -3,13 +3,7 @@
   <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>My movies - {% block title %}{% endblock %}</title>
-    <style>
-        body{
-            background-image: url("moroccan-flower-dark.png") !important;
-            background-size: cover;
-        }
-    </style>
+    <title>BandBuddy - {% block title %}{% endblock %}</title>
     <link rel="stylesheet"
           href="{{ url_for('static', filename='bandbuddy.css') }}"/>
     <link rel="stylesheet"
@@ -28,19 +22,28 @@
           <span class="navbar-item">
             <a class="button is-link" href="{{ url_for('member_requests_page') }}">List Member Requests</a>
           </span>
-          {% if current_user.is_admin %}
+          {% if current_user.is_authenticated %}
           <span class="navbar-item">
-            <a class="button is-link" href="{{ url_for('request_add_page') }}">Add a Request</a>
+            <a class="button is-link" href="{{ url_for('member_request_add_page') }}">Add a Member Request</a>
+          </span>
+          <span class="navbar-item">
+            <a class="button is-link" href="{{ url_for('band_request_add_page') }}">Add a Band Request</a>
+          </span>
+          <span class="navbar-item">
+            <a class="button is-link" href="{{ url_for('band_add_page') }}">Create a Band</a>
           </span>
           {% endif %}
-          <span class="navbar-item">
           {% if not current_user.is_authenticated %}
+          <span class="navbar-item"></span>
             <a class="button is-link" href="{{ url_for('login_page') }}">Log in</a>
-          {% else %}
-            {{ current_user.username }}
-            <a class="button is-link" href="{{ url_for('logout_page') }}">Log out</a>
-          {% endif %}
           </span>
+          <span class="navbar-item"></span>
+            <a class="button is-link" href="{{ url_for('signup_page') }}">Sign Up</a>
+          </span>
+          {% else %}
+          <a class="button is-link" href="{{ url_for('logout_page') }}">Log out</a>
+          {% endif %}
+          {% if current_user.is_authenticated %}  Hi {{ current_user.username }}! {% endif %}
         </div>
       </nav>
     </header>
