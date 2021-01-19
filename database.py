@@ -56,7 +56,7 @@ class Database:
 
     def get_city(self, cityname):#done
         cursor = self.db.connection.cursor()
-        query = "SELECT * FROM city WHERE city_name = ?;"
+        query = "SELECT * FROM city WHERE city_name = %s;"
         cursor.execute(query, (cityname))
         city = cursor.fetchone()
         if city is not None:
@@ -124,50 +124,55 @@ class Database:
         else: 
             return None
 
-    def increment_city_player_number(self, city_name):
+    def increment_city_player_number(self, city_name):#done
         cursor = self.db.connection.cursor()
         query = "SELECT number_of_players FROM city WHERE city_name = %s;"
         cursor.execute(query, (city_name,))
         player_number = cursor.fetchone()[0]
         player_number +=1
-        query = "UPDATE city SET number_of_players = %s WHERE city_name = %s"
+        query = "UPDATE city SET number_of_players = %s WHERE city_name = %s;"
         cursor.execute(query, (player_number, city_name))
         cursor.connection.commit()
 
-    def increment_city_band_number(self, city_name):
+    def increment_city_band_number(self, city_name):#done
         cursor = self.db.connection.cursor()
         query = "SELECT number_of_bands FROM city WHERE city_name = %s;"
         cursor.execute(query, (city_name,))
         band_number = cursor.fetchone()[0]
         band_number += 1
-        query = "UPDATE city SET number_of_bands = %s WHERE city_name = %s"
+        query = "UPDATE city SET number_of_bands = %s WHERE city_name = %s;"
         cursor.execute(query, (band_number, city_name))
         cursor.connection.commit()
 
 
-    def get_all_bands():
+    def get_all_bands(self):#done
         cursor = self.db.connection.cursor()
-        #use join to get the city of the leader
+        query = "SELECT band.band_name, player.city, band.leader, band.genre, band.level FROM band INNER JOIN player ON band.leader = player.user_name;"
+        cursor.execute(query)
+        bands = cursor.fetchall()
+        cursor.connection.commit()
+        return bands
 
     
     def get_all_band_requests(self):
         cursor = self.db.connection.cursor()
-        query = "SELECT * FROM band_request ORDER BY request_date;"
+        query = "SELECT player.user_name, band_request.instrument, band_request.goal, band_request.genre, band_request.request_date FROM band_request INNER JOIN player ON band_request.creator_id = player.user_id ORDER BY band_request.request_date"
         cursor.execute(query)
-        data = cursor.fetchall()
-        return data
+        requests = cursor.fetchall()
+        cursor.connection.commit()
+        return requests
 
     def get_all_member_requests(self):
         cursor = self.db.connection.cursor()
-        query = "SELECT * FROM member_request ORDER BY request_date;"
+        query = "SELECT band.band_name, member_request.instrument, member_request.gender_pref, member_request.goal, member_request.request_date FROM member_request JOIN band ON member_request.band_id = band.band_id ORDER BY member_request.request_date"
         cursor.execute(query)
         data = cursor.fetchall()
         return data
 
     def get_band_request(self, request_id):
         cursor = self.db.connection.cursor()
-        query = "SELECT * FROM band_request WHERE request_id = ?;"
-        cursor.execute(query, (request_id))
+        query = "SELECT * FROM band_request WHERE request_id = %s;"
+        cursor.execute(query, (request_id,))
         request = cursor.fetchone()
         if request is not None:
             return request
@@ -176,8 +181,8 @@ class Database:
 
     def get_member_request(self, request_id):
         cursor = self.db.connection.cursor()
-        query = "SELECT * FROM member_request WHERE request_id = ?;"
-        cursor.execute(query, (request_id))
+        query = "SELECT * FROM member_request WHERE request_id = %s;"
+        cursor.execute(query, (request_id,))
         request = cursor.fetchone()
         if request is not None:
             return request
@@ -186,11 +191,11 @@ class Database:
 
     def delete_member_request(self, request_id):
         cursor = self.db.connection.cursor()
-        query = "DELETE FROM member_request WHERE request_id = ?;"
+        query = "DELETE FROM member_request WHERE request_id = %s;"
         cursor.execute(query, (request_id))
 
     def delete_band_request(self, request_id):
         cursor = self.db.connection.cursor()
-        query = "DELETE FROM band_request WHERE request_id = ?;"
+        query = "DELETE FROM band_request WHERE request_id = %s;"
         cursor.execute(query, (request_id))
 
