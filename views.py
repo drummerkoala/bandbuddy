@@ -31,8 +31,43 @@ def signup_page():
         flash("Success!")
         return redirect(url_for("home_page"))
     else:
-        flash("Username already exists")
+        flash("Username already exists!")
         return render_template("signup_page.html")
+
+@login_required
+def band_add_page():
+    new_band = NewBandForm()
+    if request.method == "GET":
+        return render_template("new_band.html")
+    db = current_app.config["db"]
+    current_user_id =current_user.user_id
+    new_band.band_name = request.form["Band Name"]
+    new_band.city = db.get_user_city(current_user_id)
+    new_band.genre = request.form["Genre"]
+    new_band.level = request.form["Level"]
+    band_id = db.add_band(current_user, new_band)
+    if (band_id != None):
+        flash("Success!")
+        return redirect(url_for("home_page"))
+    else:
+        flash("Band already exists!")
+        return render_template("new_band.html")
+
+@login_required
+def member_request_add_page():
+    new_request = MemberRequestForm()
+    if  request.method == "GET":
+        return render_template("member_request.html")
+    if form.validate_on_submit():
+        db = current_app.config["db"]
+        new_request.goal = request.form["Goal"]
+        new_request.instrument = request.form["Instrument"]
+        new_request.pref_gender = request.form["Gender"]
+        ################################### CREATE BAND PAGE FIRST THEN CONTINUE FROM HERE
+        
+        lastrow = db.add_member_request(member_request)
+        flash("Request added!")
+        return render_template("member_request.html")
 
 def login_page():
     form = LoginForm()
@@ -118,24 +153,6 @@ def movies_page():
         flash("%(num)d movies deleted." % {"num": len(form_movie_keys)})
         return redirect(url_for("band_requests_page"))    
 
-def user_add_page():
-    form = NewUserForm()
-    if form.validate_on_submit():
-        user_name = form.data["name"]
-        password = form.data["password"]
-        age = form.data["age"]
-        gender = form.data["gender"]
-        instrument = form.data["instrument"]
-        city = form.data["city"]
-        level = form.data["level"]
-        goal = form.data["goal"]
-        user = BBUser(user_name, password, age, gender, instrument, city, level, goal)
-        db = current_app.config["db"]
-        lastrow = db.add_user(user)
-        flash("Success!")
-        return redirect(url_for("login_page"))
-
-
 @login_required
 def member_request_add_page():
     form = MemberRequestForm()
@@ -143,9 +160,9 @@ def member_request_add_page():
         instrument = form.data["instrument"]
         goal = form.data["goal"]
         gender = form.data["pref_gender"]
-        request = MemberRequest(instrument, goal, gender)
+        member_request = MemberRequest(instrument, goal, gender)
         db = current_app.config["db"]
-        lastrow = db.add_member_request()
+        lastrow = db.add_member_request(member_request)
         flash("Request added!")
         return render_template("member_request.html")
 
@@ -159,7 +176,7 @@ def band_request_add_page():
         db = current_app.config["db"]
         lastrow = db.add_band_request()
         flash("Request added!")
-        return render_template("member_request.html")
+        return render_template("band_request.html")
 
 
 def validate_movie_form(form):

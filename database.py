@@ -20,19 +20,20 @@ class Database:
         else:
             return None
 
-        
-
     def add_band(self, user, band):
-        cursor = self.db.connection.cursor()
-        query = "INSERT INTO band (band_name, leader, genre, level, city) VALUES (%s, %s, %s, %s, %s);"
-        cursor.execute(query, (band.band_name, user.user_name, band.genre, band.level, band.city))
-        connection.commit()
-        lastrowid = cursor.lastrowid
-        return lastrowid
+        if (self.get_band(band.band_name) == None):
+            cursor = self.db.connection.cursor()
+            query = "INSERT INTO band (band_name, leader, genre, level) VALUES (%s, %s, %s, %s);"
+            cursor.execute(query, (band.band_name, user.username, band.genre, band.level))
+            cursor.connection.commit()
+            lastrowid = cursor.lastrowid
+            return lastrowid
+        else:
+            return None
 
     def add_member_request(self, user, band, request, timenow):
         cursor = self.db.connection.cursor()
-        query = "INSERT INTO member_request (band_id, instrument, request_date, gender_pref, goal) VALUES (?, ?, ?, ?, ?);"
+        query = "INSERT INTO member_request (band_id, instrument, request_date, gender_pref, goal) VALUES (%s, %s, %s, %s, %s);"
         cursor.execute(query, (band.band_id, request.instrument, timenow, request.gender_pref, request.goal))
         connection.commit()
         lastrow = cursor.lastrowid
@@ -83,6 +84,26 @@ class Database:
         else: 
             return None
 
+    def get_band(self, band_name):
+        cursor = self.db.connection.cursor()
+        query = "SELECT * FROM band WHERE band_name = %s;"
+        cursor.execute(query, (band_name,))
+        band = cursor.fetchone()
+        if band is not None:
+            return band
+        else: 
+            return None
+
+    def get_band_with_username(self, username):
+        cursor = self.db.connection.cursor()
+        query = "SELECT * FROM band WHERE leader = %s;"
+        cursor.execute(query, (username,))
+        band = cursor.fetchone()
+        if band is not None:
+            return band
+        else: 
+            return None
+
     def get_user_id(self, username):
         cursor = self.db.connection.cursor()
         query = "SELECT user_id FROM player WHERE user_name = %s;"
@@ -90,6 +111,16 @@ class Database:
         user_id = cursor.fetchone()
         if user_id is not None:
             return user_id
+        else: 
+            return None
+
+    def get_user_city(self, user_id):
+        cursor = self.db.connection.cursor()
+        query = "SELECT city FROM player WHERE user_id = %s;"
+        cursor.execute(query, (user_id,))
+        user_city = cursor.fetchone()
+        if user_city is not None:
+            return user_city
         else: 
             return None
 
