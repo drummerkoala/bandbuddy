@@ -27,6 +27,7 @@ def signup_page():
     new_user.level = request.form["Level"]
     new_user.goal = request.form["Goal"]
     user_check = db.add_user(new_user)
+    db.increment_city_player_number(new_user.city)
     if (user_check != None):
         flash("Success!")
         return redirect(url_for("home_page"))
@@ -96,6 +97,7 @@ def band_add_page():
     new_band.genre = request.form["Genre"]
     new_band.level = request.form["Level"]
     band_id = db.add_band(current_user, new_band)
+    db.increment_city_band_number(new_band.city)
     if (band_id != None):
         flash("Success!")
         return redirect(url_for("home_page"))
