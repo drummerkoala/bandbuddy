@@ -13,6 +13,36 @@ def home_page():
     day_name = today.strftime("%A")
     return render_template("home.html", day=day_name)
 
+def bands_page():
+    db = current_app.config["db"]
+    bands = db.get_all_bands()
+    return render_template("all_bands.html", bands=bands)
+
+def band_requests_page(): # partially done, add apply to request button
+    db = current_app.config["db"]
+    band_requests = db.get_all_band_requests()
+    return render_template("band_requests.html", requests=band_requests)
+    """if request.method == "GET":
+        
+    else:
+        if not current_user.is_authenticated: #change it to check if the  current user is the creator of the form
+            abort(401)
+        return render_template("band_requests.html")
+        #implement later
+    return render_template("band_requests.html")"""
+
+def member_requests_page():
+    db = current_app.config["db"]
+    print(current_user)
+    if request.method == "GET":
+        member_requests = db.get_all_member_requests()
+        return render_template("member_requests.html", requests=member_requests)
+    else:
+        if not current_user.is_admin: #change it to check if the  current user is the creator of the form
+            abort(401)
+        return render_template("member_requests.html")
+        #implement later
+
 def signup_page():
     new_user = NewUserForm()
     if  request.method == "GET":
@@ -52,7 +82,6 @@ def login_page():
         flash("Invalid credentials.")
     return render_template("login.html", form=form)
 
-
 def logout_page():
     logout_user()
     flash("You have logged out.")
@@ -82,8 +111,6 @@ def member_request_add_page():
     print("love")
     flash("Request added!")
     return render_template("home.html")
-
-
 
 @login_required
 def band_add_page():
@@ -125,68 +152,21 @@ def band_request_add_page():
     flash("Request added!")
     return redirect(url_for("home_page"))
 
-
-
 def member_request_page(request_id):
-    
-    request = db.get_member_request(request_id)
-    if request is None:
-        abort(404)
-    return render_template("member_request.html", request=request)
+    db = current_app.config["db"]
+    member_request = db.get_member_request(request_id)
+    if  request.method == "GET":
+        if member_request is None:
+            abort(404)
+        return render_template("member_req.html", request=member_request)
 
 def band_request_page(request_id):
     db = current_app.config["db"]
-    request = db.get_band_request(request_id)
-    if request is None:
-        abort(404)
-    return render_template("band_request.html", request=request)
-
-def movie_page(movie_key):
-    db = current_app.config["db"]
-    movie = db.get_movie(movie_key)
-    if movie is None:
-        abort(404)
-    return render_template("movie.html", movie=movie)
-
-def member_requests_page():
-    db = current_app.config["db"]
-    print(current_user)
-    if request.method == "GET":
-        member_requests = db.get_all_member_requests()
-        return render_template("member_requests.html", requests=member_requests)
-    else:
-        if not current_user.is_admin: #change it to check if the  current user is the creator of the form
-            abort(401)
-        return render_template("member_requests.html")
-        #implement later
-        
-def band_requests_page():
-    db = current_app.config["db"]
-    if request.method == "GET":
-        band_requests = db.get_all_band_requests()
-        return render_template("band_requests.html", requests=band_requests)
-    else:
-        if not current_user.is_admin: #change it to check if the  current user is the creator of the form
-            abort(401)
-        return render_template("band_requests.html")
-        #implement later
-    return render_template("band_requests.html")
-
-def movies_page():
-    db = current_app.config["db"]
-    if request.method == "GET":
-        movies = db.get_movies()
-        return render_template("movies.html", movies=sorted(movies))
-    else:
-        if not current_user.is_admin:
-            abort(401)
-        form_movie_keys = request.form.getlist("movie_keys")
-        for form_movie_key in form_movie_keys:
-            db.delete_movie(int(form_movie_key))
-        flash("%(num)d movies deleted." % {"num": len(form_movie_keys)})
-        return redirect(url_for("band_requests_page"))    
-
-
+    band_request = db.get_band_request(request_id)
+    if  request.method == "GET":
+        if band_request is None:
+            abort(404)
+    return render_template("band_req.html", request=band_request)
 
 
 
