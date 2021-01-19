@@ -78,7 +78,7 @@
                   Log in
                 </a>
                 {% else %}
-                <a class="button is-light" href="{{ url_for('logout_page') }}">
+                <a class="button is-light">
                   {{ current_user.username }}
                 </a>
                 <a class="button is-light" href="{{ url_for('logout_page') }}">
