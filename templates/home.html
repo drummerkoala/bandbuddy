@@ -1,7 +1,37 @@
 {% extends "layout.html" %}
 {% block title %}Home{% endblock %}
 {% block content %}
-    <h1>My love collection</h1>
+    <h1>Welcome!</h1>
     <p>Have a nice {{ day }}!</p>
+    <p>BandBuddy is a website for musicians that are looking for bands; or band members that are looking for another group member.</p>
+
+    <div class='container has-text-centered'> 
+        <div class='columns is-mobile is-centered'> 
+          <div class='column is-8'> 
+            <div> 
+              <h1 class='title'>Players and Bands in Cities</h1> 
+              <hr> 
+            </div> 
+            <table class='table is-hoverable is-striped'> 
+              <thead> 
+                <tr> 
+                  <th>City</th> 
+                  <th>Number of Players</th> 
+                  <th>Number of Bands</th>                   
+                </tr> 
+              </thead>
+              {% for row in cities%}  
+              <tbody> 
+                <tr> 
+                  <td>{{row[0]}}</td> 
+                  <td>{{row[1]}}</td> 
+                  <td>{{row[2]}}</td>                   
+                </tr> 
+               {%endfor%}
+              </tbody> 
+            </table> 
+          </div> 
+        </div> 
+      </div> 
 
 {% endblock %}
