@@ -1,7 +1,6 @@
 from datetime import datetime
 from flask import abort, current_app, render_template, request, redirect, url_for, flash
-from forms import MovieEditForm, LoginForm, NewBandForm, NewUserForm, BandRequestForm, MemberRequestForm
-from movie import Movie
+from forms import LoginForm, NewBandForm, NewUserForm, BandRequestForm, MemberRequestForm
 from classes import BBUser, Band, BandRequest, MemberRequest
 from flask_login import login_required, login_user, current_user, logout_user
 from user import get_user
@@ -9,9 +8,11 @@ from passlib.hash import pbkdf2_sha256 as hasher
 
 
 def home_page():
+    db = current_app.config["db"]
     today = datetime.today()
     day_name = today.strftime("%A")
-    return render_template("home.html", day=day_name)
+    city_data = db.get_all_cities()
+    return render_template("home.html", day=day_name, cities=city_data)
 
 def bands_page():
     db = current_app.config["db"]
@@ -33,7 +34,6 @@ def band_requests_page(): # partially done, add apply to request button
 
 def member_requests_page():
     db = current_app.config["db"]
-    print(current_user)
     if request.method == "GET":
         member_requests = db.get_all_member_requests()
         return render_template("member_requests.html", requests=member_requests)
@@ -76,7 +76,7 @@ def login_page():
             password = form.data["password"]
             if hasher.verify(password, user.password):
                 login_user(user)
-                flash("You have logged in.")
+                flash("Login successful.")
                 next_page = request.args.get("next", url_for("home_page"))
                 return redirect(next_page)
         flash("Invalid credentials.")
@@ -89,7 +89,6 @@ def logout_page():
 
 @login_required
 def member_request_add_page():
-    print("HATE")
     db = current_app.config["db"]
     new_request = MemberRequestForm()
     user_name = current_user.username
@@ -100,15 +99,11 @@ def member_request_add_page():
             return redirect(url_for("home_page"))
         else:
             return render_template("member_request.html")
-    print("LOVE")
     new_request.goal = request.form["Goal"]
     new_request.instrument = request.form["Instrument"]
     new_request.pref_gender = request.form["Gender"]
     time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    print(time_now)
     lastrow = db.add_member_request(current_user, band, new_request, time_now)
-    print(time_now)
-    print("love")
     flash("Request added!")
     return render_template("home.html")
 
@@ -123,6 +118,10 @@ def band_add_page():
     new_band.city = db.get_user_city(current_user_id)
     new_band.genre = request.form["Genre"]
     new_band.level = request.form["Level"]
+    band_check = db.get_band_with_username(current_user.username)
+    if band_check is not None:
+            flash("You are already in a band.")
+            return redirect(url_for("home_page"))
     band_id = db.add_band(current_user, new_band)
     db.increment_city_band_number(new_band.city)
     if (band_id != None):
@@ -167,31 +166,4 @@ def band_request_page(request_id):
         if band_request is None:
             abort(404)
     return render_template("band_req.html", request=band_request)
-
-
-
-
-def validate_movie_form(form):
-    form.data = {}
-    form.errors = {}
-
-    form_title = form.get("title", "").strip()
-    if len(form_title) == 0:
-        form.errors["title"] = "Title can not be blank."
-    else:
-        form.data["title"] = form_title
-
-    form_year = form.get("year")
-    if not form_year:
-        form.data["year"] = None
-    elif not form_year.isdigit():
-        form.errors["year"] = "Year must consist of digits only."
-    else:
-        year = int(form_year)
-        if (year < 1887) or (year > datetime.now().year):
-            form.errors["year"] = "Year not in valid range."
-        else:
-            form.data["year"] = year
-
-    return len(form.errors) == 0
 
