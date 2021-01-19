@@ -42,10 +42,11 @@ class Database:
 
     def add_band_request(self, user, request, timenow):
         cursor = self.db.connection.cursor()
-        query = "INSERT INTO band_request (creator_id, instrument, request_date, goal, genre) VALUES (?, ?, ?, ?, ?);"
-        cursor.execute(query, (user.user_id, request.instrument, timenow, request.goal, request.genre))
+        query = "INSERT INTO band_request (creator_id, instrument, request_date, goal, genre) VALUES (%s, %s, %s, %s, %s);"
+        cursor.execute(query, (user[0], user[4], timenow, request.goal, request.genre))
         cursor.connection.commit()
         lastrow = cursor.lastrowid
+        print(lastrow)
         return lastrow
 
     def get_all_cities(self):

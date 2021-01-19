@@ -34,6 +34,29 @@ def signup_page():
         flash("Username already exists!")
         return render_template("signup_page.html")
 
+def login_page():
+    form = LoginForm()
+    if form.validate_on_submit():
+        db = current_app.config["db"]
+        username = form.data["username"]
+        user_id = db.get_user_id(username)
+        if user_id is not None:
+            user = get_user(user_id)
+            password = form.data["password"]
+            if hasher.verify(password, user.password):
+                login_user(user)
+                flash("You have logged in.")
+                next_page = request.args.get("next", url_for("home_page"))
+                return redirect(next_page)
+        flash("Invalid credentials.")
+    return render_template("login.html", form=form)
+
+
+def logout_page():
+    logout_user()
+    flash("You have logged out.")
+    return redirect(url_for("home_page"))
+
 @login_required
 def member_request_add_page():
     print("HATE")
@@ -57,7 +80,8 @@ def member_request_add_page():
     print(time_now)
     print("love")
     flash("Request added!")
-    return render_template("member_request.html")
+    return render_template("home.html")
+
 
 
 @login_required
@@ -79,29 +103,24 @@ def band_add_page():
         flash("Band already exists!")
         return render_template("new_band.html")
 
-
-
-def login_page():
-    form = LoginForm()
-    if form.validate_on_submit():
-        db = current_app.config["db"]
-        username = form.data["username"]
-        user_id = db.get_user_id(username)
-        if user_id is not None:
-            user = get_user(user_id)
-            password = form.data["password"]
-            if hasher.verify(password, user.password):
-                login_user(user)
-                flash("You have logged in.")
-                next_page = request.args.get("next", url_for("home_page"))
-                return redirect(next_page)
-        flash("Invalid credentials.")
-    return render_template("login.html", form=form)
-
-
-def logout_page():
-    logout_user()
-    flash("You have logged out.")
+@login_required
+def band_request_add_page():
+    db = current_app.config["db"]
+    new_request = BandRequestForm()
+    user_name = current_user.username
+    form_user = db.get_user(user_name)
+    band = db.get_band_with_username(user_name)
+    if  request.method == "GET":
+        if band is not None:
+            flash("You are already in a band.")
+            return redirect(url_for("home_page"))
+        else:
+            return render_template("band_request.html")
+    new_request.goal = request.form["Goal"]
+    new_request.genre = request.form["Genre"]
+    time_now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    lastrow = db.add_band_request(form_user, new_request, time_now)
+    flash("Request added!")
     return redirect(url_for("home_page"))
 
 
@@ -167,17 +186,7 @@ def movies_page():
 
 
 
-@login_required
-def band_request_add_page():
-    form = BandRequestForm()
-    if form.validate_on_submit():
-        goal = form.data["goal"]
-        genre = form.data["genre"]
-        request = BandRequest(goal, genre)
-        db = current_app.config["db"]
-        lastrow = db.add_band_request()
-        flash("Request added!")
-        return render_template("band_request.html")
+
 
 
 def validate_movie_form(form):
