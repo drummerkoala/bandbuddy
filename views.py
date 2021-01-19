@@ -19,29 +19,16 @@ def bands_page():
     bands = db.get_all_bands()
     return render_template("all_bands.html", bands=bands)
 
-def band_requests_page(): # partially done, add apply to request button
+def band_requests_page():
     db = current_app.config["db"]
     band_requests = db.get_all_band_requests()
     return render_template("band_requests.html", requests=band_requests)
-    """if request.method == "GET":
-        
-    else:
-        if not current_user.is_authenticated: #change it to check if the  current user is the creator of the form
-            abort(401)
-        return render_template("band_requests.html")
-        #implement later
-    return render_template("band_requests.html")"""
 
 def member_requests_page():
     db = current_app.config["db"]
     if request.method == "GET":
         member_requests = db.get_all_member_requests()
-        return render_template("member_requests.html", requests=member_requests)
-    else:
-        if not current_user.is_admin: #change it to check if the  current user is the creator of the form
-            abort(401)
-        return render_template("member_requests.html")
-        #implement later
+        return render_template("member_requests.html", requests=member_requests, user=current_user)
 
 def signup_page():
     new_user = NewUserForm()

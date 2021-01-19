@@ -16,6 +16,7 @@
               <th>Goal</th> 
               <th>Genre</th> 
               <th>Request Date</th> 
+              <th>Delete</th> 
             </tr> 
           </thead>
           {% for row in requests%}  
@@ -25,7 +26,7 @@
               <td>{{row[1]}}</td> 
               <td>{{row[2]}}</td> 
               <td>{{row[3]}}</td> 
-              <td>{{row[4]}}</td> 
+              <td>{{row[4]}}</td>               
             </tr> 
            {%endfor%}
             

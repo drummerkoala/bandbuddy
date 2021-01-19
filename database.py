@@ -8,7 +8,7 @@ class Database:
     def __init__(self, app):
         self.db = MySQL(app)
 
-    def add_user(self, user):#done
+    def add_user(self, user):
         if (self.get_user(user.user_name) is None):
             cursor = self.db.connection.cursor()
             query = "INSERT INTO player (user_name, password, instrument, city, level, age, gender, goal) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);"
@@ -20,7 +20,7 @@ class Database:
         else:
             return None
 
-    def add_band(self, user, band):#done
+    def add_band(self, user, band):
         if (self.get_band(band.band_name) == None):
             cursor = self.db.connection.cursor()
             query = "INSERT INTO band (band_name, leader, genre, level) VALUES (%s, %s, %s, %s);"
@@ -31,7 +31,7 @@ class Database:
         else:
             return None
 
-    def add_member_request(self, user, band, request, timenow):#done
+    def add_member_request(self, user, band, request, timenow):
         cursor = self.db.connection.cursor()
         query = "INSERT INTO member_request (band_id, instrument, request_date, gender_pref, goal) VALUES (%s, %s, %s, %s, %s);"
         cursor.execute(query, (band[0], request.instrument, timenow, request.pref_gender, request.goal))
@@ -39,7 +39,7 @@ class Database:
         lastrow = cursor.lastrowid
         return lastrow
 
-    def add_band_request(self, user, request, timenow):#done
+    def add_band_request(self, user, request, timenow):
         cursor = self.db.connection.cursor()
         query = "INSERT INTO band_request (creator_id, instrument, request_date, goal, genre) VALUES (%s, %s, %s, %s, %s);"
         cursor.execute(query, (user[0], user[4], timenow, request.goal, request.genre))
@@ -47,14 +47,14 @@ class Database:
         lastrow = cursor.lastrowid
         return lastrow
 
-    def get_all_cities(self):#done
+    def get_all_cities(self):
         cursor = self.db.connection.cursor()
         query = "SELECT * FROM city ORDER BY city_name;"
         cursor.execute(query)
         data = cursor.fetchall()
         return data
 
-    def get_city(self, cityname):#done
+    def get_city(self, cityname):
         cursor = self.db.connection.cursor()
         query = "SELECT * FROM city WHERE city_name = %s;"
         cursor.execute(query, (cityname))
@@ -64,7 +64,7 @@ class Database:
         else: 
             return None
 
-    def get_user(self, username):#done
+    def get_user(self, username):
         cursor = self.db.connection.cursor()
         query = "SELECT * FROM player WHERE user_name = %s;"
         cursor.execute(query, (username,))
@@ -74,7 +74,7 @@ class Database:
         else: 
             return None
 
-    def get_user_with_id(self, user_id):#done
+    def get_user_with_id(self, user_id):
         cursor = self.db.connection.cursor()
         query = "SELECT * FROM player WHERE user_id = %s;"
         cursor.execute(query, (user_id,))
@@ -84,7 +84,7 @@ class Database:
         else: 
             return None
 
-    def get_band(self, band_name):#done
+    def get_band(self, band_name):
         cursor = self.db.connection.cursor()
         query = "SELECT * FROM band WHERE band_name = %s;"
         cursor.execute(query, (band_name,))
@@ -94,7 +94,7 @@ class Database:
         else: 
             return None
 
-    def get_band_with_username(self, username):#done
+    def get_band_with_username(self, username):
         cursor = self.db.connection.cursor()
         query = "SELECT * FROM band WHERE leader = %s;"
         cursor.execute(query, (username,))
@@ -104,7 +104,7 @@ class Database:
         else: 
             return None
 
-    def get_user_id(self, username):#done
+    def get_user_id(self, username):
         cursor = self.db.connection.cursor()
         query = "SELECT user_id FROM player WHERE user_name = %s;"
         cursor.execute(query, (username,))
@@ -114,7 +114,7 @@ class Database:
         else: 
             return None
 
-    def get_user_city(self, user_id):#done
+    def get_user_city(self, user_id):
         cursor = self.db.connection.cursor()
         query = "SELECT city FROM player WHERE user_id = %s;"
         cursor.execute(query, (user_id,))
@@ -124,7 +124,7 @@ class Database:
         else: 
             return None
 
-    def increment_city_player_number(self, city_name):#done
+    def increment_city_player_number(self, city_name):
         cursor = self.db.connection.cursor()
         query = "SELECT number_of_players FROM city WHERE city_name = %s;"
         cursor.execute(query, (city_name,))
@@ -134,7 +134,7 @@ class Database:
         cursor.execute(query, (player_number, city_name))
         cursor.connection.commit()
 
-    def increment_city_band_number(self, city_name):#done
+    def increment_city_band_number(self, city_name):
         cursor = self.db.connection.cursor()
         query = "SELECT number_of_bands FROM city WHERE city_name = %s;"
         cursor.execute(query, (city_name,))
@@ -145,7 +145,7 @@ class Database:
         cursor.connection.commit()
 
 
-    def get_all_bands(self):#done
+    def get_all_bands(self):
         cursor = self.db.connection.cursor()
         query = "SELECT band.band_name, player.city, band.leader, band.genre, band.level FROM band INNER JOIN player ON band.leader = player.user_name;"
         cursor.execute(query)
@@ -198,4 +198,3 @@ class Database:
         cursor = self.db.connection.cursor()
         query = "DELETE FROM band_request WHERE request_id = %s;"
         cursor.execute(query, (request_id))
-
