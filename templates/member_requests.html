@@ -1,7 +1,38 @@
 {% extends "layout.html" %}
 {% block title %}Bands{% endblock %}
 {% block content %}
-    <h1>My love collection</h1>
-    <p>Have a nice {{ requests }}!</p>
+    <div class='container has-text-centered'> 
+        <div class='columns is-mobile is-centered'> 
+          <div class='column is-8'> 
+            <div> 
+              <h1 class='title'>Member Requests</h1> 
+              <hr> 
+            </div> 
+            <table class='table is-hoverable is-striped'> 
+              <thead> 
+                <tr> 
+                  <th>Band Name</th> 
+                  <th>Needed Instrument</th> 
+                  <th>Preferred Gender</th> 
+                  <th>Goal</th> 
+                  <th>Request Date</th> 
+                </tr> 
+              </thead>
+              {% for row in requests%}  
+              <tbody> 
+                <tr> 
+                  <td>{{row[0]}}</td> 
+                  <td>{{row[1]}}</td> 
+                  <td>{{row[2]}}</td> 
+                  <td>{{row[3]}}</td> 
+                  <td>{{row[4]}}</td> 
+                </tr> 
+               {%endfor%}
+                
+              </tbody> 
+            </table> 
+          </div> 
+        </div> 
+      </div> 
 
 {% endblock %}
