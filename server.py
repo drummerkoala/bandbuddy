@@ -34,7 +34,7 @@ def create_app():
     lm.init_app(app)
     lm.login_view = "login_page"
 
-    db = Database(app)
+    db = Database()
     app.config["db"] = db
 
     return app
